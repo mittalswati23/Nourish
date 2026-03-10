@@ -1,0 +1,78 @@
+---
+description: Nourish AI meal planner — product spec, stack, types, and implementation patterns
+alwaysApply: true
+---
+
+# Nourish — AI Meal Planner
+
+**Product:** User sets diet preferences + what's in the fridge → get a 5-day meal plan (breakfast, lunch, snack, dinner per day) with recipes and a consolidated shopping list. Target: busy professionals. Tagline: "Plan once. Eat well."
+
+## Tech stack
+
+- **Framework:** React 18 + TypeScript, Vite
+- **Styling:** Tailwind CSS
+- **Routing:** React Router v6
+- **Server state:** TanStack Query (meal plan from API)
+- **AI:** Claude API (claude-sonnet-4-6) via Vercel API route — never expose API key in frontend
+- **Persistence:** localStorage for last plan + shopping checked state
+- **Deploy:** Vercel
+
+## Tailwind (quick reference)
+
+- **What it is:** Style via utility classes on `className` (no separate CSS files). One class = one concern (e.g. `flex`, `p-4`, `text-ink`).
+- **Design tokens:** In `tailwind.config.js`, extend `theme` with the blueprint palette so you get `bg-paper`, `text-ink`, `border-accent`, `text-muted`, `bg-cream`, `bg-accent`, `bg-accent2`, etc. Map `--ink`, `--paper`, `--cream`, `--accent`, `--accent2`, `--muted`, `--border` from the design.
+- **Frequently used:** Layout — `flex`, `flex-col`, `items-center`, `justify-between`, `gap-2` / `gap-4`. Grid — `grid`, `grid-cols-2`, `grid-cols-4`. Spacing — `p-4`, `px-4`, `mb-4`, `mt-2`. Typography — `font-serif` (Playfair), `font-mono` (labels), `text-sm` / `text-lg`. Responsive — `md:grid-cols-2`, `sm:flex-row`.
+- **Purge-safe:** Use complete class names in JSX. Avoid `` `text-${color}` ``; use a mapping or full names (e.g. `text-ink`, `text-accent`) so Tailwind’s content scan keeps the classes.
+
+## User flow (4 screens)
+
+1. **Preferences** — Diet style chips, allergy/avoid chips, fridge ingredient grid (toggle what you have), max cook time. Generate button triggers plan generation.
+2. **Kitchen scan** — Same screen: tag fridge items; Nourish uses these first (fewer items to buy).
+3. **Plan (Your Week)** — 5 days (Mon–Fri), 4 meals per day. Day tabs. Each meal card: name, prep time, calories, fridge items used. Click meal → RecipeModal (ingredients + steps). "View Shopping List" → next screen.
+4. **Shopping list** — Grouped by category (Produce, Protein, Dairy, Pantry, Grains). Checkbox per item; progress bar; persist checked state in localStorage. Export to clipboard, "Back to Plan".
+
+## Source structure
+
+```
+src/
+├── App.tsx                    # router, layout
+├── features/
+│   ├── preferences/          # PreferencesPage, DietChips, AllergyChips, FridgeGrid
+│   ├── plan/                 # PlanPage, DayColumn, MealCard, RecipeModal
+│   └── shopping/             # ShoppingPage, CategorySection, ShoppingItem
+├── services/claude.ts         # generateMealPlan(prefs) → POST /api/claude
+├── context/PrefsContext.tsx   # prefs state, localStorage init
+├── types/meal.types.ts        # UserPreferences, Meal, Recipe, DayPlan, MealPlan, ShoppingItem
+└── hooks/
+    ├── useGeneratePlan.ts     # TanStack Query, enabled: false, refetch() on button
+    └── useShoppingProgress.ts # checked count, total, percentage
+```
+
+## Data types (TypeScript)
+
+- **UserPreferences:** dietStyle string[], allergies string[], fridgeItems string[], servings number, cuisines string[], maxCookTime number
+- **Meal:** name, calories, prepTime, usesFridgeItems string[], recipe Recipe
+- **Recipe:** ingredients string[], steps string[]
+- **DayPlan:** day string, breakfast, lunch, snack, dinner (each Meal)
+- **MealPlan:** days DayPlan[], shoppingList ShoppingItem[], generatedAt Date
+- **ShoppingItem:** name, amount, category — no `checked`; track in UI state (e.g. Set<string>) and localStorage key `nourish-shopping-checked`
+
+## Claude integration
+
+- **Frontend:** Call only `/api/claude` (Vercel serverless route). No Anthropic key in client.
+- **System prompt:** Respond ONLY with valid JSON, no markdown fences. Schema: `{ days: DayPlan[], shoppingList: ShoppingItem[] }`. Prioritize fridge items; respect diet and allergies. Prep: breakfast ≤15 min, lunch ≤25 min, dinner ≤45 min. Group shopping list by Produce, Protein, Dairy, Pantry, Grains.
+- **useGeneratePlan:** `useQuery({ queryKey: ['meal-plan', prefs], queryFn: () => generateMealPlan(prefs), enabled: false, staleTime: Infinity, retry: 1 })`. Caller uses `refetch()` on Generate click. On success (data present), navigate to `/plan`.
+
+## Key patterns
+
+- **Plan screen:** Read plan via `useQueryClient().getQueryData(['meal-plan', prefs])`. If empty, redirect to `/`.
+- **Shopping checked state:** `useState<Set<string>>` initialized from `localStorage.getItem('nourish-shopping-checked')`; write back in `toggleItem`. Use `useShoppingProgress(plan, checked)` for progress bar.
+- **RecipeModal:** Backdrop blur, close on overlay click or X. Ingredients 2-col grid; steps numbered list.
+- **Design:** Clean white–green palette. Playfair Display headings, DM Sans body, DM Mono labels. Efficiency-first; avoid decorative noise.
+
+## UI details
+
+- Diet chips: multi-select pills; selected = filled brand color, unselected = outline.
+- Fridge grid: 4-column toggle tiles (emoji + name); selected = warm border.
+- Meal cards: left border color by type — gold=breakfast, green=lunch, grey=snack, accent=dinner.
+- Shopping: CategorySection headers in monospace; checked items strikethrough + reduced opacity.
