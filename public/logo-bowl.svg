@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+  <title>Nourish - Bowl mark</title>
+  <!-- Steam (three wavy ascending lines) -->
+  <path d="M16 8 Q18 14 16 20" stroke="#2D6A4F" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  <path d="M24 6 Q26 14 24 22" stroke="#2D6A4F" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  <path d="M32 8 Q34 14 32 20" stroke="#2D6A4F" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  <!-- Bowl: U-shape wider at top, narrower at base -->
+  <path d="M10 20 C10 40 38 40 38 20" stroke="#2D6A4F" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- Inner curve suggesting depth -->
+  <path d="M16 24 C16 36 32 36 32 24" stroke="#2D6A4F" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.6"/>
+</svg>

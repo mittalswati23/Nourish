@@ -1,7 +1,9 @@
 {
   "name": "nourish",
+  "description": "AI-powered 5-day meal planner: set diet preferences and what's in your fridge → get a plan with recipes and a shopping list.",
   "private": true,
   "version": "0.0.0",
+  "keywords": ["meal-planning", "recipe", "ai", "react", "claude"],
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -20,11 +20,16 @@ export default async function handler(
     return res.status(500).json({ error: 'ANTHROPIC_API_KEY not configured' })
   }
 
-  let body: unknown
+  let body: { system?: string; userMessage?: string }
   try {
     body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
   } catch {
     return res.status(400).json({ error: 'Invalid JSON body' })
+  }
+
+  const { system, userMessage } = body
+  if (!system || !userMessage) {
+    return res.status(400).json({ error: 'Missing system or userMessage' })
   }
 
   try {
@@ -35,17 +40,34 @@ export default async function handler(
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        model: 'claude-3-5-sonnet-20241022',
+        max_tokens: 8192,
+        system,
+        messages: [{ role: 'user', content: userMessage }],
+      }),
     })
 
-    const data = await response.json()
+    const data = (await response.json()) as {
+      content?: Array<{ type: string; text?: string }>
+      error?: { message: string }
+    }
 
     if (!response.ok) {
       return res.status(response.status).json(data)
     }
 
+    const text = data.content
+      ?.filter((b): b is { type: 'text'; text: string } => b.type === 'text')
+      .map((b) => b.text)
+      .join('')
+
+    if (!text) {
+      return res.status(500).json({ error: 'Invalid response: no content from Claude' })
+    }
+
     res.setHeader('Content-Type', 'application/json')
-    return res.status(200).json(data)
+    return res.status(200).json({ text })
   } catch (err) {
     console.error('Claude API error:', err)
     return res.status(500).json({

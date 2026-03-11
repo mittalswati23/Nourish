@@ -15,6 +15,8 @@ export interface Recipe {
 export interface Meal {
   name: string
   calories: number
+  protein?: number
+  sugar?: number
   prepTime: string
   usesFridgeItems: string[]
   recipe: Recipe

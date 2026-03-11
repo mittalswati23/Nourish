@@ -13,7 +13,7 @@ alwaysApply: true
 - **Styling:** Tailwind CSS
 - **Routing:** React Router v6
 - **Server state:** TanStack Query (meal plan from API)
-- **AI:** Claude API (claude-sonnet-4-6) via Vercel API route — never expose API key in frontend
+- **AI:** Google Gemini API (gemini-2.0-flash) via Vercel API route — never expose API key in frontend
 - **Persistence:** localStorage for last plan + shopping checked state
 - **Deploy:** Vercel
 
@@ -40,7 +40,7 @@ src/
 │   ├── preferences/          # PreferencesPage, DietChips, AllergyChips, FridgeGrid
 │   ├── plan/                 # PlanPage, DayColumn, MealCard, RecipeModal
 │   └── shopping/             # ShoppingPage, CategorySection, ShoppingItem
-├── services/claude.ts         # generateMealPlan(prefs) → POST /api/claude
+├── services/ai.ts             # generateMealPlan(prefs) → POST /api/generate
 ├── context/PrefsContext.tsx   # prefs state, localStorage init
 ├── types/meal.types.ts        # UserPreferences, Meal, Recipe, DayPlan, MealPlan, ShoppingItem
 └── hooks/
@@ -57,10 +57,11 @@ src/
 - **MealPlan:** days DayPlan[], shoppingList ShoppingItem[], generatedAt Date
 - **ShoppingItem:** name, amount, category — no `checked`; track in UI state (e.g. Set<string>) and localStorage key `nourish-shopping-checked`
 
-## Claude integration
+## Gemini integration
 
-- **Frontend:** Call only `/api/claude` (Vercel serverless route). No Anthropic key in client.
-- **System prompt:** Respond ONLY with valid JSON, no markdown fences. Schema: `{ days: DayPlan[], shoppingList: ShoppingItem[] }`. Prioritize fridge items; respect diet and allergies. Prep: breakfast ≤15 min, lunch ≤25 min, dinner ≤45 min. Group shopping list by Produce, Protein, Dairy, Pantry, Grains.
+- **Frontend:** Call only `/api/generate` (Vercel serverless route). No Gemini key in client.
+- **API:** `api/generate.ts` reads `GEMINI_API_KEY` from env, forwards to `generativelanguage.googleapis.com`, model `gemini-2.0-flash`. Uses `responseMimeType: 'application/json'` for guaranteed JSON output.
+- **System prompt:** Via `systemInstruction`. Respond ONLY with valid JSON. Schema: `{ days: DayPlan[], shoppingList: ShoppingItem[] }`. Prioritize fridge items; respect diet and allergies. Prep: breakfast ≤15 min, lunch ≤25 min, dinner ≤45 min. Group shopping list by Produce, Protein, Dairy, Pantry, Grains.
 - **useGeneratePlan:** `useQuery({ queryKey: ['meal-plan', prefs], queryFn: () => generateMealPlan(prefs), enabled: false, staleTime: Infinity, retry: 1 })`. Caller uses `refetch()` on Generate click. On success (data present), navigate to `/plan`.
 
 ## Key patterns

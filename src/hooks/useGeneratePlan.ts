@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { generateMealPlan } from '@/services/claude'
+import { generateMealPlan } from '@/services/ai'
 import type { UserPreferences } from '@/types/meal.types'
 
 export function useGeneratePlan(prefs: UserPreferences) {

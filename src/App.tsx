@@ -1,38 +1,23 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-
-function HomePlaceholder() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-paper">
-      <p className="text-ink font-serif text-xl">Nourish — Step 1 scaffold. Preferences screen next.</p>
-    </div>
-  )
-}
-
-function PlanPlaceholder() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-cream">
-      <p className="text-ink font-mono text-sm">/plan — Plan page (Step 3)</p>
-    </div>
-  )
-}
-
-function ShoppingPlaceholder() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-cream">
-      <p className="text-ink font-mono text-sm">/shopping — Shopping page (Step 4)</p>
-    </div>
-  )
-}
+import { PreferencesPage } from '@/features/preferences/PreferencesPage'
+import { PlanPage } from '@/features/plan/PlanPage'
+import { ShoppingPage } from '@/features/shopping/ShoppingPage'
+import { AppHeader } from '@/components/AppHeader'
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePlaceholder />} />
-        <Route path="/plan" element={<PlanPlaceholder />} />
-        <Route path="/shopping" element={<ShoppingPlaceholder />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <div className="flex flex-col min-h-screen">
+        <AppHeader />
+        <main className="flex-1 overflow-y-auto pt-4">
+          <Routes>
+            <Route path="/" element={<PreferencesPage />} />
+            <Route path="/plan" element={<PlanPage />} />
+            <Route path="/shopping" element={<ShoppingPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+      </div>
     </BrowserRouter>
   )
 }

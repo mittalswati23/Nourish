@@ -18,3 +18,7 @@ dist/
 
 # Vercel
 .vercel
+
+# Test / coverage
+coverage/
+*.lcov

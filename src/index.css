@@ -1,9 +1,50 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Theme CSS variables - set on html via useEffect */
+:root, html[data-theme="light"] {
+  --nourish-bg: #F7FAF7;
+  --nourish-text: #1B2B1F;
+  --nourish-muted: #6B8F71;
+  --nourish-border: #C8DEC8;
+  --nourish-cream: #EEF5EE;
+  --nourish-warm: #E3EDE3;
+  --nourish-header: #FFFFFF;
+}
+html[data-theme="dark"] {
+  --nourish-bg: #0F1F14;
+  --nourish-text: #E8F5E9;
+  --nourish-muted: #8BAB8F;
+  --nourish-border: #2D4A3A;
+  --nourish-cream: #1A2E1F;
+  --nourish-warm: #243B28;
+  --nourish-header: #40916C;
+}
+
+html, body, #root {
+  min-height: 100vh;
+}
+
 body {
-  @apply bg-paper text-ink font-sans font-light antialiased;
+  background-color: var(--nourish-bg);
+  color: var(--nourish-text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle background texture */
+.bg-texture {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+}
+html[data-theme="dark"] .bg-texture {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.06'/%3E%3C/svg%3E");
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: none; }
 }

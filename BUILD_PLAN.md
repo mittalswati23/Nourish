@@ -26,12 +26,12 @@ Build the full app following these steps. Keep this file in sync as you progress
 
 **Goal:** User can set diet, allergies, fridge items and generate a plan; on success, navigate to `/plan`.
 
-- [ ] Build `PreferencesPage`: reads/writes prefs from `PrefsContext`.
-- [ ] **DietChips:** multi-select pills (Mediterranean, Vegetarian, Vegan, Keto, Paleo, High-Protein, Gluten-Free, No restrictions). Selected = filled brand color; unselected = outline.
-- [ ] **AllergyChips:** same pattern (Shellfish, Gluten, Dairy, Nuts, Eggs, Soy, Pork).
-- [ ] **FridgeGrid:** 4-column grid of ingredient tiles (emoji + name); toggle selected state (warm border). Include ~16 common ingredients; optional custom add.
-- [ ] **Generate button:** disabled until at least one diet style selected. On click: save prefs to localStorage, call `refetch()` from `useGeneratePlan`. Show loading ("Building your week…") and error state with retry.
-- [ ] On success (`data` from `useGeneratePlan`), navigate to `/plan` (e.g. `useEffect` watching `data`).
+- [x] Build `PreferencesPage`: reads/writes prefs from `PrefsContext`.
+- [x] **DietChips:** multi-select pills (Mediterranean, Vegetarian, Vegan, Keto, Paleo, High-Protein, Gluten-Free, No restrictions). Selected = filled brand color; unselected = outline.
+- [x] **AllergyChips:** same pattern (Shellfish, Gluten, Dairy, Nuts, Eggs, Soy, Pork).
+- [x] **FridgeGrid:** 4-column grid of ingredient tiles (emoji + name); toggle selected state (warm border). Include ~16 common ingredients; optional custom add.
+- [x] **Generate button:** disabled until at least one diet style selected. On click: save prefs to localStorage, call `refetch()` from `useGeneratePlan`. Show loading ("Building your week…") and error state with retry.
+- [x] On success (`data` from `useGeneratePlan`), navigate to `/plan` (e.g. `useEffect` watching `data`).
 
 **Done when:** Selecting options and clicking Generate leads to the plan screen with data.
 
@@ -41,12 +41,12 @@ Build the full app following these steps. Keep this file in sync as you progress
 
 **Goal:** 5-day plan with day tabs; each meal opens a recipe modal; user can go to shopping list.
 
-- [ ] **PlanPage:** get plan via `useQueryClient().getQueryData(['meal-plan', prefs])`. If empty, redirect to `/`.
-- [ ] **Day tabs:** Mon–Fri; show active day; optional daily calorie total in tab.
-- [ ] **MealCard:** one per slot (breakfast, lunch, snack, dinner). Show name, prep time, calories, fridge items used. Left border: gold=breakfast, green=lunch, grey=snack, accent=dinner. Click → open RecipeModal.
-- [ ] **RecipeModal:** overlay with backdrop blur; ingredients (2-col grid), steps (numbered list). Close on backdrop click or X.
-- [ ] **Regenerate:** button that calls `refetch()` from `useGeneratePlan`.
-- [ ] **CTA:** "View Shopping List →" navigates to `/shopping`.
+- [x] **PlanPage:** get plan via `useQueryClient().getQueryData(['meal-plan', prefs])`. If empty, redirect to `/`.
+- [x] **Day tabs:** Mon–Fri; show active day; optional daily calorie total in tab.
+- [x] **MealCard:** one per slot (breakfast, lunch, snack, dinner). Show name, prep time, calories, fridge items used. Left border: gold=breakfast, green=lunch, grey=snack, accent=dinner. Click → open RecipeModal.
+- [x] **RecipeModal:** overlay with backdrop blur; ingredients (2-col grid), steps (numbered list). Close on backdrop click or X.
+- [x] **Regenerate:** button that calls `refetch()` from `useGeneratePlan`.
+- [x] **CTA:** "View Shopping List →" navigates to `/shopping`.
 
 **Done when:** Full flow from preferences → plan → open recipe → go to shopping works.
 
