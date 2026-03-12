@@ -4,6 +4,32 @@
 
 AI-powered 5-day meal planner: set diet preferences and what’s in your fridge → get a plan with recipes and a shopping list.
 
+## Quick start (simplest — no API key)
+
+```bash
+git clone <your-repo-url>
+cd nourish
+npm install
+echo "VITE_USE_MOCK=true" > .env.local
+npm run dev
+```
+
+Open http://localhost:5173 — the app runs with sample data. No API key needed.
+
+## Screenshots
+
+**Preferences** — Set diet, skip list, and kitchen ingredients
+
+![Preferences](docs/screenshots/screenshot-preferences.png)
+
+**Meal Plan** — 5-day plan with recipes
+
+![Meal Plan](docs/screenshots/screenshot-plan.png)
+
+**Shopping List** — Check off items, export to clipboard
+
+![Shopping List](docs/screenshots/screenshot-shopping.png)
+
 ## Features
 
 - **Preferences** — Choose diet style (Mediterranean, Vegetarian, Vegan, etc.), ingredients to skip, and what's already in your kitchen
